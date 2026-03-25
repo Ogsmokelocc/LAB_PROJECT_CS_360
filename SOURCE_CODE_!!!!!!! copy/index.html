@@ -1,0 +1,132 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Palouse Properties</title>
+
+
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&display=swap');
+
+:root{
+    --primary: #C17857;
+    --secondary: #3D7D8A;
+    --accent: #F5DEB3;
+    --dark: #2D3436;
+    --light: #F8F6F1;
+}
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Montserrat', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+}
+
+body{
+    overflow-x: hidden;
+    background: #E8DCC8;
+    min-height: 100vh;
+    background-image: url(./MoscowPictures/IMG_4687.JPG);
+    background-repeat: no-repeat;
+    background-attachment: scroll;
+    background-size: cover;
+    background-position: center;
+    background-blend-mode: multiply;
+    background-color: rgba(224, 179, 136, 0.4);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+#header{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 40px 100px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 100;
+    background: linear-gradient(180deg, rgba(248, 246, 241, 0.95) 0%, rgba(248, 246, 241, 0.8) 100%);
+    box-shadow: 0 4px 20px rgba(45, 52, 54, 0.1);
+}
+
+#header .logo{
+    font-weight: 700;
+    font-size: 2rem;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+}
+
+#header .logo img{
+    height: 70px;
+    width: auto;
+    filter: drop-shadow(0 2px 4px rgba(45, 52, 54, 0.15));
+}
+
+#header ul{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+#header ul li{
+    list-style: none;
+}
+
+#header ul li a{
+    text-decoration: none;
+    padding: 8px 14px;
+    color: var(--dark);
+    background: transparent;
+    border: 1px solid rgba(45,34,30,0.08);
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    letter-spacing: 0.6px;
+    transition: color 220ms ease, background 220ms ease, transform 180ms ease;
+    position: relative;
+    white-space: nowrap;
+    padding-inline: 14px 14px;
+}
+
+#header ul li a:hover,
+#header ul li a.active{
+    color: var(--dark);
+    background: rgba(193,120,87,0.06);
+    transform: translateY(-2px);
+}
+
+
+
+</style>
+</head>
+<body>
+    <header id ="header">
+        <a href="#" class="logo"><img src="./MoscowPictures/pplogo.png" alt="Palouse Properties"></a>
+
+        <ul>
+            <li><a href="index.html" class="active">Home</a></li>
+            <li><a href="rentals.html">Rentals</a></li>
+            <li><a href="https://www.paylease.com/registration/pay_portal/6623/STD/?crd=1&vpw=1680">Pay Online</a></li>
+            <li><a href="maintenance.html">Maintenance</a></li>
+            <li><a href="applications&Forms.html">Applications And Forms</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="contact.html">Contact</a></li>
+        </ul>
+    </header>
+
+    <section>
+        <div class="sun"></div>
+        
+    </section>
+</body>
+</html>
