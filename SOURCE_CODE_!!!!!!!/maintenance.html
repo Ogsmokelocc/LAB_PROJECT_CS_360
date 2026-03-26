@@ -12,7 +12,7 @@
         :root {
             --primary: #C17857;
             --secondary: #3D7D8A;
-            --accent: #F5DEB3;
+            --accent: #000000;
             --dark: #2D3436;
             --light: #F8F6F1;
         }
@@ -192,6 +192,18 @@
             margin: 20px 40px 0;
         }
 
+        .ticket-ref{
+            display: none;
+            background: rgba(193, 120, 87, 0.8);
+            border: 1.5px solid var(--primary);
+            border-radius: 8px;
+            padding: 14px 18px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: var(--primary);
+            margin: 10px 40px 0;  
+        }
+
         .form-row {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -225,6 +237,7 @@
             transition: border-color 200ms ease, box-shadow 200ms ease;
             font-family: 'Montserrat', sans-serif;
             resize: none;
+            
         }
 
         .field-group input:focus,
@@ -241,7 +254,7 @@
             resize: none;
         }
 
-        .btn-submit{
+        .btn-submit {
             padding: 12px 40px;
             background: var(--primary);
             color: #ffff;
@@ -256,7 +269,7 @@
 
         }
 
-        .btn-submit:hover{
+        .btn-submit:hover {
             background: #a8623e;
             transform: translateY(-2px);
             box-shadow: 0 4px 16px rgba(193, 120, 87, 0.35);
@@ -390,7 +403,9 @@
 
 
                 <div class="form-footer">
-                    <p class="form-note">Typical Response time within one besiness day, For urgent issues call <stronng> 206-691-2101</stronng></p>
+                    <p class="form-note">Typical Response time within one besiness day, For urgent issues call <stronng>
+                            206-691-2101</stronng>
+                    </p>
                     <button class="btn-submit" onclick="submitMaintenance()">Submit Request</button>
                 </div>
 
@@ -399,6 +414,60 @@
     </div>
 
     <script>
+        function handleFile(input) 
+        {
+            const el = document.getElementById('file-name');
+            if (input.files && input.files[0]) {
+                el.textContent = input.files[0].name;
+                el.style.display = 'block';
+            }
+        }
+
+        function submitMaintenance() {
+
+            const first = document.getElementById('m-first').value.trim();
+            const last = document.getElementById('m-last').value.trim();
+            const email = document.getElementById('m-email').value.trim();
+            const phone = document.getElementById('m-phone').value.trim();
+            const address = document.getElementById('m-address').value.trim();
+            const category = document.getElementById('m-category').value.trim();
+            const desc = document.getElementById('m-description').value.trim();
+
+            if(!first || !last || !email || !phone || !address || !category || !des)
+            {
+                alert('Please fill out all required fields in the form please.');
+                return;
+            }
+
+            const ticketID ='PP-' + Date.now().toString().slice(-6);
+
+            const payload = 
+            {
+                ticketID,
+                fisrtName: first,
+                lastName: last,
+                email,
+                phone,
+                address,
+                unit: document.getElementById('m-unit').value.trim(),
+                category,
+                description: desc,
+                preferredTime: document.getElementById('m-contact-time').value.trim(),
+                submittedAt: new Date().toISOString()
+            };
+
+            console.log('Maintenance payload:', payload);
+            showSuccess(ticketID);
+        }
+
+        function showSuccess(ticketID)
+        {
+            document.getElementById('success-banner').style.display = 'block';
+            const ref = document.getElementById('ticket-ref');
+            ref.style.display='block';
+            ref.textContent = `Ticket reference: ${ticketID}`;
+            window.scrollTo({top: 0, behavior: "smooth"});
+        }
 
     </script>
 </body>

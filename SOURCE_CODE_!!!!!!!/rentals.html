@@ -27,28 +27,29 @@
             text-rendering: optimizeLegibility;
         }
 
-        body{
-    overflow-x: hidden;
-    background: #E8DCC8;
-    min-height: 100vh;
-    background-image: url(./MoscowPictures/IMG_4689.JPG);
-    background-repeat: no-repeat;
-    background-attachment: scroll;
-    background-size: cover;
-    background-position: center;
-    background-blend-mode: multiply;
-    background-color: rgba(224, 179, 136, 0.4);
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-}
+        body {
+            overflow-x: hidden;
+            background: #E8DCC8;
+            min-height: 100vh;
+            background-image: url(./MoscowPictures/IMG_4689.JPG);
+            background-repeat: no-repeat;
+            background-attachment: scroll;
+            background-size: cover;
+            background-position: center;
+            background-blend-mode: multiply;
+            background-color: rgba(224, 179, 136, 0.4);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
 
 
         #header {
-            position: absolute;
+            position: fixed;
             top: 0;
             left: 0;
             width: 100%;
-            padding: 40px 100px;
+            padding: 20px 100px;
+            /* need to add this styling to all pages*/
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -104,6 +105,17 @@
             background: rgba(193, 120, 87, 0.06);
             transform: translateY(-2px);
         }
+
+        /* for the body of the wbepage*/
+        .page-content{
+            padding-top: 120px;
+            padding-bottom: 60px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap:28px;
+        }
     </style>
 </head>
 
@@ -121,6 +133,75 @@
             <li><a href="contact.html">Contact</a></li>
         </ul>
     </header>
+
+
+
+    <div class="page-content">
+        <h1 class="page-title">Available Rentals</h1>
+
+
+        <!-- this is the search form-->
+        <div class="search-card">
+            <h2>Find Rental</h2>
+            <div class="search-grid">
+                <div class="field-group">
+                    <label for="search-location"> Location/ Address</Address></label>
+                    <input type="text" id="search-location" placeholder="Moscow, ID..."
+                        onkeydown="if(event.key==='Enter') searchProperties()">
+                </div>
+                <div class="field-group">
+                    <label for="search-type">Property Type</label>
+                    <select id="search-type">
+                        <option value="">All Types</option>
+                        <option value="Apartment">Apartment</option>
+                        <option value="House">House</option>
+                        <option value="studio">Studio</option>
+                        <option value="TownHome">TownHome</option>
+                    </select>
+                </div>
+
+                <div class="field-group">
+                    <label for="search-beds">Bedrooms</label>
+                    <select id="search-beds">
+                        <option value="">Any</option>
+                        <option value="0">Studio</option>
+                        <option value="1">1 Bedroom</option>
+                        <option value="2">2 Bedrooms</option>
+                        <option value="3">3 Bedrooms</option>
+                        <option value="4">4+ Bedrooms</option>
+                    </select>
+                </div>
+
+                <div class="field-group">
+                    <label for="search-price">Max Rent $</label>
+                    <input type="number" id="search-price" placeholder="e.g. 999" min="0">
+                </div>
+                <button class="btn-search" onclick="searchProperties()">Search</button>
+            </div>
+        </div>
+
+
+
+        <!-- DA results from search-->
+        <div class="results-meta" id="results-meta">Loading Properties</div>
+
+        <!-- Property Listings-->
+        <div class="Listings-card">
+            <div class="listings-header">
+                <span>Properties</span>
+                <select class="sort-select" id="sort-select" onchange="sortListings(this.value)">
+                    <option value="price-ascending">Price: Low → High</option>
+                    <option value="price-descending">Price: High → Low</option>
+                    <option value="beds-descending">Bedrooms: Max → Min</option>
+                    <option value="beds-ascending">Bedrooms: Min → Max</option>
+                </select>
+            </div>
+            <div class="listings-scroll" id="listings-grid"></div>
+        </div>
+    </div>
+    <script>
+        //Will add the functionality here
+    </script>
 </body>
 
 </html>
