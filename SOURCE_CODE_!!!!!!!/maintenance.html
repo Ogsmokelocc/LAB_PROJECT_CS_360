@@ -433,7 +433,7 @@
             const category = document.getElementById('m-category').value.trim();
             const desc = document.getElementById('m-description').value.trim();
 
-            if(!first || !last || !email || !phone || !address || !category || !des)
+            if(!first || !last || !email || !phone || !address || !category || !desc)
             {
                 alert('Please fill out all required fields in the form please.');
                 return;
@@ -444,7 +444,7 @@
             const payload = 
             {
                 ticketID,
-                fisrtName: first,
+                firstName: first,
                 lastName: last,
                 email,
                 phone,
@@ -453,7 +453,7 @@
                 category,
                 description: desc,
                 preferredTime: document.getElementById('m-contact-time').value.trim(),
-                submittedAt: new Date().toISOStringfor()
+                submittedAt: new Date().toISOString()
             };
 
             console.log('Maintenance payload:', payload);
