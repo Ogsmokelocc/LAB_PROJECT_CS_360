@@ -153,14 +153,22 @@
             align-items: end;
         }
 
-        .field-group { display: flex; flex-direction: column; gap: 6px; }
- 
-        .field-group label {
-            font-size: 0.70rem; font-weight: 700; letter-spacing: 0.8px;
-            text-transform: uppercase; color: #6b6560;
+        .field-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
         }
 
-        .field-group input, .field-group select {
+        .field-group label {
+            font-size: 0.70rem;
+            font-weight: 700;
+            letter-spacing: 0.8px;
+            text-transform: uppercase;
+            color: #6b6560;
+        }
+
+        .field-group input,
+        .field-group select {
             padding: 10px 14px;
             border: 1.5px solid rgba(45, 34, 30, 0.14);
             border-radius: 8px;
@@ -171,8 +179,9 @@
             transition: border-color 200ms ease, box-shadow 200ms ease;
             font-family: 'Montserrat', sans-serif;
         }
- 
-        .field-group input:focus, .field-group select:focus {
+
+        .field-group input:focus,
+        .field-group select:focus {
             border-color: var(--primary);
             box-shadow: 0 0 0 3px rgba(193, 120, 87, 0.12);
         }
@@ -191,13 +200,23 @@
             white-space: nowrap;
             font-family: 'Montserrat', sans-serif;
         }
- 
+
         .btn-search:hover {
             background: #a8623e;
             transform: translateY(-2px);
             box-shadow: 0 4px 16px rgba(193, 120, 87, 0.35);
         }
 
+        /* ── RESULTS META ── */
+        .results-meta {
+            width: 90%;
+            max-width: 860px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: rgba(248, 246, 241, 0.9);
+            letter-spacing: 0.5px;
+            text-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+        }
 
         .listings-card {
             background: rgba(248, 246, 241, 0.93);
@@ -208,23 +227,26 @@
             max-width: 860px;
             overflow: hidden;
         }
- 
+
         .listings-header {
             padding: 16px 24px;
-            border-bottom: 1.5px solid rgba(45,34,30,0.08);
+            border-bottom: 1.5px solid rgba(45, 34, 30, 0.08);
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
- 
+
         .listings-header span {
-            font-size: 0.76rem; font-weight: 700;
-            letter-spacing: 1.2px; text-transform: uppercase; color: var(--primary);
+            font-size: 0.76rem;
+            font-weight: 700;
+            letter-spacing: 1.2px;
+            text-transform: uppercase;
+            color: var(--primary);
         }
- 
+
         .sort-select {
             padding: 6px 12px;
-            border: 1.5px solid rgba(45,34,30,0.12);
+            border: 1.5px solid rgba(45, 34, 30, 0.12);
             border-radius: 6px;
             font-size: 0.76rem;
             font-weight: 600;
@@ -234,7 +256,7 @@
             cursor: pointer;
             font-family: 'Montserrat', sans-serif;
         }
- 
+
         .listings-scroll {
             max-height: 520px;
             overflow-y: auto;
@@ -243,14 +265,24 @@
             grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
             gap: 18px;
             scrollbar-width: thin;
-            scrollbar-color: var(--primary) rgba(45,34,30,0.08);
+            scrollbar-color: var(--primary) rgba(45, 34, 30, 0.08);
         }
 
 
-        .listings-scroll::-webkit-scrollbar { width: 6px; }
-        .listings-scroll::-webkit-scrollbar-track { background: rgba(45,34,30,0.06); border-radius: 3px; }
-        .listings-scroll::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 3px; }
- 
+        .listings-scroll::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .listings-scroll::-webkit-scrollbar-track {
+            background: rgba(45, 34, 30, 0.06);
+            border-radius: 3px;
+        }
+
+        .listings-scroll::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 3px;
+        }
+
         /* ── PROPERTY CARD ── */
         .property-card {
             background: #fff;
@@ -259,33 +291,33 @@
             box-shadow: 0 2px 10px rgba(45, 52, 54, 0.08);
             transition: transform 220ms ease, box-shadow 220ms ease;
             cursor: pointer;
-            border: 1.5px solid rgba(45,34,30,0.06);
+            border: 1.5px solid rgba(45, 34, 30, 0.06);
             position: relative;
         }
- 
+
         .property-card:hover {
             transform: translateY(-4px);
             box-shadow: 0 8px 24px rgba(45, 52, 54, 0.15);
         }
- 
+
         .property-img-wrap {
             width: 100%;
             aspect-ratio: 4/3;
             overflow: hidden;
             position: relative;
         }
- 
+
         .property-img-wrap img {
             width: 100%;
             height: 100%;
             object-fit: cover;
             transition: transform 400ms ease;
         }
- 
+
         .property-card:hover .property-img-wrap img {
             transform: scale(1.04);
         }
- 
+
         .property-img-placeholder {
             width: 100%;
             aspect-ratio: 4/3;
@@ -296,7 +328,7 @@
             font-size: 2.4rem;
             opacity: 0.5;
         }
- 
+
         .img-badge {
             position: absolute;
             top: 10px;
@@ -310,27 +342,84 @@
             text-transform: uppercase;
             z-index: 2;
         }
- 
-        .badge-available { background: var(--primary); }
-        .badge-leased    { background: #888; }
- 
-        .property-info { padding: 14px 16px; }
- 
+
+        .badge-available {
+            background: var(--primary);
+        }
+
+        .badge-leased {
+            background: #888;
+        }
+
+        .property-info {
+            padding: 14px 16px;
+        }
+
         .property-price {
             font-size: 1.12rem;
             font-weight: 800;
             color: var(--primary);
             margin-bottom: 4px;
         }
- 
-        .property-price span { font-size: 0.72rem; font-weight: 500; color: #8a8278; }
- 
+
+        .property-price span {
+            font-size: 0.72rem;
+            font-weight: 500;
+            color: #8a8278;
+        }
+
         .property-address {
             font-size: 0.8rem;
             font-weight: 600;
             color: var(--dark);
             margin-bottom: 10px;
             line-height: 1.3;
+        }
+
+        .property-details {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .detail-chip {
+            font-size: 0.72rem;
+            font-weight: 600;
+            color: #7a726a;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .empty-state {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 48px 20px;
+            color: #8a8278;
+            font-size: 0.88rem;
+            font-weight: 500;
+        }
+
+        @media (max-width: 820px) {
+            #header {
+                padding: 16px 24px;
+            }
+
+            #header ul {
+                display: none;
+            }
+
+            .search-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .search-grid .btn-search {
+                grid-column: 1 / -1;
+            }
+
+            .listings-scroll {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
@@ -406,17 +495,199 @@
             <div class="listings-header">
                 <span>Properties</span>
                 <select class="sort-select" id="sort-select" onchange="sortListings(this.value)">
-                    <option value="price-ascending">Price: Low → High</option>
-                    <option value="price-descending">Price: High → Low</option>
-                    <option value="beds-descending">Bedrooms: Max → Min</option>
-                    <option value="beds-ascending">Bedrooms: Min → Max</option>
+                    <option value="price-asc">Price: Low → High</option>
+                    <option value="price-desc">Price: High → Low</option>
+                    <option value="beds-desc">Bedrooms: Max → Min</option>
+                    <option value="beds-asc">Bedrooms: Min → Max</option>
                 </select>
             </div>
             <div class="listings-scroll" id="listings-grid"></div>
         </div>
     </div>
     <script>
-        //Will add the functionality here
+   // ── Config ──────────────────────────────────────────────────
+        const API_BASE = 'http://localhost:3000';
+ 
+        // ── State ───────────────────────────────────────────────────
+        let allProperties = [];      // full results from last API call
+        let displayedProperties = []; // sorted/filtered subset
+ 
+        // ── On page load: fetch all properties ──────────────────────
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchProperties({});
+        });
+ 
+        // ── Search button handler ────────────────────────────────────
+        function searchProperties() {
+            const location  = document.getElementById('search-location').value.trim();
+            const type      = document.getElementById('search-type').value;
+            const beds      = document.getElementById('search-beds').value;
+            const maxPrice  = document.getElementById('search-price').value;
+ 
+            const params = {};
+            if (location)  params.location  = location;
+            if (type)      params.type      = type;
+            if (beds !== '') params.beds    = beds;
+            if (maxPrice)  params.maxPrice  = maxPrice;
+ 
+            fetchProperties(params);
+        }
+ 
+        // ── Fetch from server ────────────────────────────────────────
+        async function fetchProperties(params) {
+            showLoading();
+ 
+            // Build query string
+            const qs = new URLSearchParams(params).toString();
+            const url = `${API_BASE}/api/properties${qs ? '?' + qs : ''}`;
+ 
+            try {
+                const res = await fetch(url);
+                if (!res.ok) throw new Error(`Server error: ${res.status}`);
+ 
+                const data = await res.json();
+ 
+                if (data.success) {
+                    allProperties = data.properties;
+                    const sortVal = document.getElementById('sort-select').value;
+                    sortAndRender(sortVal);
+                } else {
+                    showError('Could not load properties. Please try again.');
+                }
+            } catch (err) {
+                console.error('Fetch error:', err);
+                showError('Unable to connect to the server. Please check your connection.');
+            }
+        }
+ 
+        // ── Sort and render ──────────────────────────────────────────
+        function sortAndRender(sortValue) {
+            displayedProperties = [...allProperties];
+ 
+            switch (sortValue) {
+                case 'price-asc':
+                    displayedProperties.sort((a, b) => a.price - b.price);
+                    break;
+                case 'price-desc':
+                    displayedProperties.sort((a, b) => b.price - a.price);
+                    break;
+                case 'beds-desc':
+                    displayedProperties.sort((a, b) => b.beds - a.beds);
+                    break;
+                case 'beds-asc':
+                    displayedProperties.sort((a, b) => a.beds - b.beds);
+                    break;
+            }
+ 
+            renderListings(displayedProperties);
+        }
+ 
+        // ── Render property cards ────────────────────────────────────
+        function renderListings(properties) {
+            const grid = document.getElementById('listings-grid');
+            const meta = document.getElementById('results-meta');
+ 
+            // Update result count
+            const count = properties.length;
+            meta.textContent = count === 0
+                ? 'No properties found matching your criteria.'
+                : `Showing ${count} propert${count === 1 ? 'y' : 'ies'}`;
+ 
+            if (count === 0) {
+                grid.innerHTML = `
+                    <div class="empty-state">
+                         No properties match your search.<br>Try adjusting your filters.
+                    </div>`;
+                return;
+            }
+ 
+            grid.innerHTML = properties.map(p => buildCard(p)).join('');
+        }
+ 
+        // ── Build a single property card ─────────────────────────────
+        function buildCard(p) {
+            // Status badge
+            const badge = p.available
+                ? `<span class="img-badge badge-available">Available</span>`
+                : `<span class="img-badge badge-leased">Leased</span>`;
+ 
+            // Image area — use first photo if available, else placeholder
+            let imageArea = '';
+            if (p.primary_image_url) {
+                const photoCount = p.photo_count && p.photo_count > 1
+                    ? `<span class="img-count-badge">📷 ${p.photo_count}</span>`
+                    : '';
+                imageArea = `
+                    <div class="property-img-wrap">
+                        ${badge}
+                        <img
+                            src="${escapeHTML(p.primary_image_url)}"
+                            alt="${escapeHTML(p.address)}"
+                            loading="lazy"
+                            onerror="this.parentElement.innerHTML='<div class=\\'property-img-placeholder\\'></div>'"
+                        >
+                        ${photoCount}
+                    </div>`;
+            } else {
+                imageArea = `
+                    <div class="property-img-wrap">
+                        ${badge}
+                        <div class="property-img-placeholder">🏠</div>
+                    </div>`;
+            }
+ 
+            // Bed/bath/sqft chips
+            const bedLabel  = p.beds === 0 ? 'Studio' : `${p.beds} bd`;
+            const bathLabel = p.baths ? `${p.baths} ba` : '';
+            const sqftLabel = p.sqft  ? `${p.sqft.toLocaleString()} sqft` : '';
+            const chips = [bedLabel, bathLabel, sqftLabel]
+                .filter(Boolean)
+                .map(t => `<span class="detail-chip">${t}</span>`)
+                .join('');
+ 
+            return `
+                <div class="property-card" onclick="viewProperty(${p.id})">
+                    ${imageArea}
+                    <div class="property-info">
+                        <div class="property-price">
+                            $${Number(p.price).toLocaleString()} <span>/ mo</span>
+                        </div>
+                        <div class="property-address">${escapeHTML(p.address)}</div>
+                        <div class="property-details">${chips}</div>
+                    </div>
+                </div>`;
+        }
+ 
+        // ── Placeholder click handler (expand later) ──────────────────
+        function viewProperty(id) {
+            // TODO: open detail modal or navigate to detail page
+            console.log('View property ID:', id);
+        }
+ 
+        // ── UI helpers ───────────────────────────────────────────────
+        function showLoading() {
+            document.getElementById('results-meta').textContent = 'Loading properties…';
+            document.getElementById('listings-grid').innerHTML = `
+                <div class="loading-state">
+                    <div class="spinner"></div>
+                    <div class="loading-text">Fetching listings…</div>
+                </div>`;
+        }
+ 
+        function showError(msg) {
+            document.getElementById('results-meta').textContent = '';
+            document.getElementById('listings-grid').innerHTML = `
+                <div class="error-state"> ${msg}</div>`;
+        }
+ 
+        function escapeHTML(str) {
+            if (!str) return '';
+            return String(str)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;');
+        }
     </script>
 </body>
 
