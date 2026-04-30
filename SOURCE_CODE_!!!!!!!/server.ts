@@ -19,11 +19,11 @@ app.use(express.static('.'));          // serve HTML/CSS/JS from project root
 
 // ── Database connection pool ──────────────────────────────────────────────────
 const pool = new Pool({
-    user:     'postgres',
-    host:     'localhost',
+    user: 'postgres',
+    host: 'localhost',
     database: 'Palouse_properties',
     password: 'admin',
-    port:     5432,
+    port: 5432,
 });
 
 // ── File upload (multer) ──────────────────────────────────────────────────────
@@ -38,7 +38,7 @@ const storage = multer.diskStorage({
     destination: (_req, _file, cb) => cb(null, UPLOAD_DIR),
     filename: (_req, file, cb) => {
         // unique name: timestamp + original extension
-        const ext  = path.extname(file.originalname).toLowerCase();
+        const ext = path.extname(file.originalname).toLowerCase();
         const name = `prop_${Date.now()}_${Math.random().toString(36).slice(2, 7)}${ext}`;
         cb(null, name);
     },
@@ -54,30 +54,30 @@ const upload = multer({
 
 // ── Type definitions ──────────────────────────────────────────────────────────
 interface MaintenanceRequest {
-    ticketID:      string;
-    firstName:     string;
-    lastName:      string;
-    email:         string;
-    phone:         string;
-    address:       string;
-    unit?:         string;
-    category:      string;
-    description:   string;
+    ticketID: string;
+    firstName: string;
+    lastName: string;
+    email: string;
+    phone: string;
+    address: string;
+    unit?: string;
+    category: string;
+    description: string;
     preferredTime?: string;
 }
 
 interface PropertyRow {
-    id:                number;
-    address:           string;
-    type:              string;
-    beds:              number;
-    baths:             number | null;
-    sqft:              number | null;
-    price:             number;
-    available:         boolean;
-    description:       string | null;
+    id: number;
+    address: string;
+    type: string;
+    beds: number;
+    baths: number | null;
+    sqft: number | null;
+    price: number;
+    available: boolean;
+    description: string | null;
     primary_image_url: string | null;
-    photo_count:       number;
+    photo_count: number;
 }
 
 // ════════════════════════════════════════════════════════════════════════════════
@@ -88,13 +88,13 @@ interface PropertyRow {
 // Query params (all optional): location, type, beds, maxPrice
 app.get('/api/properties', async (req: Request, res: Response) => {
     try {
-        const location    = req.query['location']  as string | undefined;
-        const type        = req.query['type']       as string | undefined;
-        const bedsRaw     = req.query['beds']       as string | undefined;
-        const maxPriceRaw = req.query['maxPrice']   as string | undefined;
+        const location = req.query['location'] as string | undefined;
+        const type = req.query['type'] as string | undefined;
+        const bedsRaw = req.query['beds'] as string | undefined;
+        const maxPriceRaw = req.query['maxPrice'] as string | undefined;
 
-        const conditions: string[]          = [];
-        const values:     (string|number)[] = [];
+        const conditions: string[] = [];
+        const values: (string | number)[] = [];
         let idx = 1;
 
         if (location) {
@@ -167,7 +167,7 @@ app.post('/submit-maintenance', async (req: Request, res: Response) => {
                 data.email,
                 data.phone,
                 data.address,
-                data.unit         || null,
+                data.unit || null,
                 data.category,
                 data.description,
                 data.preferredTime || null,
@@ -215,8 +215,8 @@ app.get('/admin/maintenance', async (_req: Request, res: Response) => {
 // Body: { status: 'open' | 'in_progress' | 'resolved' }
 app.patch('/admin/maintenance/:id/status', async (req: Request, res: Response) => {
     try {
-        const { id }     = req.params as { id: string };
-        const { status } = req.body   as { status: string };
+        const { id } = req.params as { id: string };
+        const { status } = req.body as { status: string };
 
         const allowed = ['open', 'in_progress', 'resolved'];
         if (!allowed.includes(status)) {
@@ -257,19 +257,19 @@ app.post(
     async (req: Request, res: Response) => {
         try {
             const b = req.body as {
-                address:         string;
-                type:            string;
-                price:           string;
-                beds:            string;
-                baths?:          string;
-                sqft?:           string;
-                available?:      string;
+                address: string;
+                type: string;
+                price: string;
+                beds: string;
+                baths?: string;
+                sqft?: string;
+                available?: string;
                 available_date?: string;
-                pet_friendly?:   string;
-                parking?:        string;
-                laundry?:        string;
-                description?:    string;
-                primary_index?:  string;
+                pet_friendly?: string;
+                parking?: string;
+                laundry?: string;
+                description?: string;
+                primary_index?: string;
             };
 
             if (!b.address || !b.type || !b.price || b.beds === undefined) {
@@ -289,26 +289,26 @@ app.post(
                     b.type,
                     parseFloat(b.price),
                     parseInt(b.beds, 10),
-                    b.baths         ? parseFloat(b.baths)  : null,
-                    b.sqft          ? parseInt(b.sqft, 10)  : null,
-                    b.available     === 'true',
+                    b.baths ? parseFloat(b.baths) : null,
+                    b.sqft ? parseInt(b.sqft, 10) : null,
+                    b.available === 'true',
                     b.available_date || null,
-                    b.pet_friendly  === 'true',
-                    b.parking       === 'true',
-                    b.laundry       || null,
-                    b.description   || null,
+                    b.pet_friendly === 'true',
+                    b.parking === 'true',
+                    b.laundry || null,
+                    b.description || null,
                 ]
             );
 
             const propertyId = (propResult.rows[0] as { id: number }).id;
             const primaryIdx = parseInt(b.primary_index ?? '0', 10) || 0;
-            const files      = (req.files ?? []) as Express.Multer.File[];
+            const files = (req.files ?? []) as Express.Multer.File[];
 
             // Insert one image row per uploaded file
             for (let i = 0; i < files.length; i++) {
                 const file = files[i];
                 if (!file) continue;
-                const imageUrl  = `/property-photos/${file.filename}`;
+                const imageUrl = `/property-photos/${file.filename}`;
                 const isPrimary = (i === primaryIdx);
 
                 await pool.query(
@@ -331,8 +331,8 @@ app.post(
 // Body: { available: boolean }
 app.patch('/admin/properties/:id/availability', async (req: Request, res: Response) => {
     try {
-        const { id }        = req.params as { id: string };
-        const { available } = req.body   as { available: boolean };
+        const { id } = req.params as { id: string };
+        const { available } = req.body as { available: boolean };
 
         await pool.query(
             `UPDATE properties SET available = $1, updated_at = NOW() WHERE id = $2`,
@@ -352,7 +352,7 @@ app.patch('/admin/properties/:id/availability', async (req: Request, res: Respon
 app.delete('/admin/properties/:id', async (req: Request, res: Response) => {
     try {
         const { id } = req.params as { id: string };
-        const pid    = parseInt(id, 10);
+        const pid = parseInt(id, 10);
 
         // Grab image paths before deleting so we can clean up disk files
         const imgResult = await pool.query<{ image_url: string }>(

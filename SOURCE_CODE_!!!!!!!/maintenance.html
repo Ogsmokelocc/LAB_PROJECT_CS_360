@@ -423,7 +423,7 @@
             }
         }
 
-        function submitMaintenance() {
+        async function submitMaintenance() {
 
             const first = document.getElementById('m-first').value.trim();
             const last = document.getElementById('m-last').value.trim();
@@ -452,12 +452,42 @@
                 unit: document.getElementById('m-unit').value.trim(),
                 category,
                 description: desc,
-                preferredTime: document.getElementById('m-contact-time').value.trim(),
-                submittedAt: new Date().toISOString()
+                preferredTime: document.getElementById('m-contact-time').value.trim()
             };
 
-            console.log('Maintenance payload:', payload);
-            showSuccess(ticketID);
+            console.log('Submitting maintenance request:', payload);
+
+            try {
+                const response = await fetch('http://localhost:3000/submit-maintenance', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    showSuccess(ticketID);
+                    // Clear the form
+                    document.getElementById('m-first').value = '';
+                    document.getElementById('m-last').value = '';
+                    document.getElementById('m-email').value = '';
+                    document.getElementById('m-phone').value = '';
+                    document.getElementById('m-address').value = '';
+                    document.getElementById('m-unit').value = '';
+                    document.getElementById('m-category').selectedIndex = 0;
+                    document.getElementById('m-description').value = '';
+                    document.getElementById('m-contact-time').value = '';
+                } else {
+                    alert('Failed to submit request. Please try again.');
+                    console.error('Server error:', data);
+                }
+            } catch (error) {
+                alert('Error submitting request. Please check your connection and try again.');
+                console.error('Submission error:', error);
+            }
         }
 
         function showSuccess(ticketID)

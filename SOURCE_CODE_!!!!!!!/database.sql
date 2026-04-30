@@ -24,8 +24,16 @@ CREATE TABLE maintenance_form (
     description  TEXT         NOT NULL,
     preferred_time TEXT,
 
+    -- Ticket workflow status — updated by admin from the admin portal
+    status       VARCHAR(20)  NOT NULL DEFAULT 'open'
+                     CHECK (status IN ('open', 'in_progress', 'resolved')),
+
     submitted_at TIMESTAMP    DEFAULT CURRENT_TIMESTAMP
 );
+
+-- Speed up admin dashboard filtering by status and submission date
+CREATE INDEX idx_maintenance_status       ON maintenance_form(status);
+CREATE INDEX idx_maintenance_submitted_at ON maintenance_form(submitted_at DESC);
 
 
 -- ------------------------------------------------------------
@@ -106,7 +114,26 @@ CREATE INDEX idx_properties_type             ON properties(type);
 
 
 -- ------------------------------------------------------------
---  4. SAMPLE DATA  (remove or adjust before production)
+--  4. MIGRATION — run ONLY if tables already exist
+--
+--  If you created the database from a prior version of this
+--  file, run just the un-commented ALTER/CREATE lines below
+--  in psql instead of re-running the entire file.
+-- ------------------------------------------------------------
+
+-- ALTER TABLE maintenance_form
+--     ADD COLUMN IF NOT EXISTS status VARCHAR(20) NOT NULL DEFAULT 'open'
+--         CHECK (status IN ('open', 'in_progress', 'resolved'));
+
+-- CREATE INDEX IF NOT EXISTS idx_maintenance_status
+--     ON maintenance_form(status);
+
+-- CREATE INDEX IF NOT EXISTS idx_maintenance_submitted_at
+--     ON maintenance_form(submitted_at DESC);
+
+
+-- ------------------------------------------------------------
+--  5. SAMPLE DATA  (remove or adjust before production)
 --     Shows how to insert a property and link its photos.
 -- ------------------------------------------------------------
 
