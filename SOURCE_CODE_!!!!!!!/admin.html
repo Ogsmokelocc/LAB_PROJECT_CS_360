@@ -1107,13 +1107,13 @@
         <div id="sidebar">
             <span class="nav-label">Dashboard</span>
             <div class="nav-item active" onclick="showSection('maintenance')" id="nav-maintenance">
-                <span class="nav-icon">🔧</span> Maintenance
+                <span class="nav-icon"></span> Maintenance
                 <span class="nav-count" id="maintenance-count">—</span>
             </div>
 
             <span class="nav-label">Listings</span>
             <div class="nav-item" onclick="showSection('properties')" id="nav-properties">
-                <span class="nav-icon">🏠</span> Properties
+                <span class="nav-icon"></span> Properties
                 <span class="nav-count" id="property-count">—</span>
             </div>
             <div class="nav-item" onclick="showSection('add-property')" id="nav-add-property">
@@ -1714,7 +1714,7 @@
 
         function propertiesError() {
             document.getElementById('properties-tbody').innerHTML =
-                `<tr class="empty-row"><td colspan="8">⚠️ Could not load properties. Is the server running?</td></tr>`;
+                `<tr class="empty-row"><td colspan="8">Could not load properties. Is the server running?</td></tr>`;
         }
 
         function filterProperties() {
