@@ -1,0 +1,1500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Admin – Palouse Properties</title>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&display=swap');
+
+        :root {
+            --primary:   #C17857;
+            --primary-d: #a8623e;
+            --secondary: #3D7D8A;
+            --dark:      #2D3436;
+            --light:     #F8F6F1;
+            --bg:        #F0EAE0;
+            --card:      rgba(248,246,241,0.97);
+            --border:    rgba(45,34,30,0.10);
+            --muted:     #8a8278;
+            --green:     #3a7d5c;
+            --red:       #b05555;
+        }
+
+        * {
+            margin: 0; padding: 0;
+            box-sizing: border-box;
+            font-family: 'Montserrat', sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ── LOGIN GATE ── */
+        #login-screen {
+            position: fixed; inset: 0; z-index: 9999;
+            background: #E8DCC8;
+            background-image: url(./MoscowPictures/IMG_4689.JPG);
+            background-size: cover; background-position: center;
+            background-blend-mode: multiply;
+            background-color: rgba(224,179,136,0.45);
+            display: flex; align-items: center; justify-content: center;
+        }
+
+        .login-box {
+            background: var(--card);
+            border-radius: 18px;
+            box-shadow: 0 12px 48px rgba(45,52,54,0.22);
+            padding: 48px 52px;
+            width: 360px;
+            display: flex; flex-direction: column; gap: 22px;
+            text-align: center;
+        }
+
+        .login-logo { height: 64px; margin: 0 auto; }
+
+        .login-box h2 {
+            font-size: 0.75rem; font-weight: 700;
+            letter-spacing: 1.6px; text-transform: uppercase;
+            color: var(--primary);
+        }
+
+        .login-box input {
+            width: 100%; padding: 11px 14px;
+            border: 1.5px solid var(--border); border-radius: 8px;
+            font-size: 0.9rem; font-family: 'Montserrat', sans-serif;
+            color: var(--dark); outline: none;
+            transition: border-color 200ms, box-shadow 200ms;
+        }
+
+        .login-box input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(193,120,87,0.14);
+        }
+
+        .btn-login {
+            padding: 12px; background: var(--primary); color: #fff;
+            border: none; border-radius: 8px; font-size: 0.9rem;
+            font-weight: 700; cursor: pointer; letter-spacing: 0.5px;
+            transition: background 200ms, transform 160ms;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .btn-login:hover { background: var(--primary-d); transform: translateY(-2px); }
+
+        .login-error {
+            font-size: 0.78rem; color: var(--red); font-weight: 600;
+            display: none;
+        }
+
+        /* ── MAIN SHELL ── */
+        body { background: var(--bg); min-height: 100vh; }
+
+        #app { display: none; min-height: 100vh; flex-direction: column; }
+
+        /* ── TOP BAR ── */
+        #topbar {
+            position: fixed; top: 0; left: 0; width: 100%; z-index: 200;
+            padding: 0 40px;
+            height: 72px;
+            display: flex; align-items: center; justify-content: space-between;
+            background: linear-gradient(180deg, rgba(248,246,241,0.97) 0%, rgba(248,246,241,0.88) 100%);
+            box-shadow: 0 3px 18px rgba(45,52,54,0.10);
+        }
+
+        .topbar-left { display: flex; align-items: center; gap: 20px; }
+        .topbar-logo { height: 48px; }
+
+        .topbar-badge {
+            font-size: 0.68rem; font-weight: 800; letter-spacing: 1.8px;
+            text-transform: uppercase; color: var(--primary);
+            background: rgba(193,120,87,0.10);
+            border: 1px solid rgba(193,120,87,0.22);
+            padding: 4px 12px; border-radius: 20px;
+        }
+
+        .topbar-right { display: flex; align-items: center; gap: 14px; }
+
+        .btn-logout {
+            padding: 7px 18px; background: transparent;
+            border: 1.5px solid var(--border); border-radius: 6px;
+            font-size: 0.78rem; font-weight: 700; color: var(--dark);
+            cursor: pointer; letter-spacing: 0.5px;
+            transition: background 180ms, transform 160ms;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .btn-logout:hover { background: rgba(193,120,87,0.07); transform: translateY(-1px); }
+
+        /* ── SIDE NAV ── */
+        #sidebar {
+            position: fixed; top: 72px; left: 0;
+            width: 220px; height: calc(100vh - 72px);
+            background: var(--card);
+            border-right: 1.5px solid var(--border);
+            padding: 28px 0;
+            display: flex; flex-direction: column; gap: 4px;
+            z-index: 100;
+        }
+
+        .nav-label {
+            font-size: 0.62rem; font-weight: 800; letter-spacing: 1.8px;
+            text-transform: uppercase; color: var(--muted);
+            padding: 0 24px; margin: 14px 0 6px;
+        }
+
+        .nav-item {
+            display: flex; align-items: center; gap: 12px;
+            padding: 10px 24px; cursor: pointer;
+            font-size: 0.82rem; font-weight: 600; color: var(--dark);
+            border-left: 3px solid transparent;
+            transition: background 160ms, color 160ms, border-color 160ms;
+            user-select: none;
+        }
+
+        .nav-item .nav-icon { font-size: 1.05rem; width: 20px; text-align: center; }
+
+        .nav-item:hover { background: rgba(193,120,87,0.06); }
+
+        .nav-item.active {
+            color: var(--primary); border-left-color: var(--primary);
+            background: rgba(193,120,87,0.08);
+        }
+
+        /* badge on nav item */
+        .nav-count {
+            margin-left: auto;
+            background: var(--primary); color: #fff;
+            font-size: 0.62rem; font-weight: 800;
+            padding: 2px 7px; border-radius: 20px;
+            min-width: 22px; text-align: center;
+        }
+
+        /* ── MAIN CONTENT ── */
+        #main {
+            margin-left: 220px;
+            padding-top: 72px;
+            min-height: 100vh;
+        }
+
+        .section {
+            display: none;
+            padding: 36px 40px 60px;
+            flex-direction: column; gap: 28px;
+        }
+
+        .section.active { display: flex; }
+
+        /* ── PAGE TITLE ROW ── */
+        .section-header {
+            display: flex; align-items: center; justify-content: space-between;
+            flex-wrap: wrap; gap: 12px;
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem; color: var(--dark); letter-spacing: 0.5px;
+        }
+
+        /* ── STAT CHIPS ── */
+        .stat-row { display: flex; gap: 16px; flex-wrap: wrap; }
+
+        .stat-chip {
+            background: var(--card); border-radius: 12px;
+            border: 1.5px solid var(--border);
+            padding: 16px 24px; flex: 1; min-width: 140px;
+            box-shadow: 0 2px 8px rgba(45,52,54,0.06);
+        }
+
+        .stat-num {
+            font-size: 1.8rem; font-weight: 800; color: var(--primary);
+            line-height: 1;
+        }
+
+        .stat-label {
+            font-size: 0.70rem; font-weight: 700; letter-spacing: 0.8px;
+            text-transform: uppercase; color: var(--muted); margin-top: 4px;
+        }
+
+        /* ── CARD SHELL ── */
+        .card {
+            background: var(--card); border-radius: 16px;
+            border: 1.5px solid var(--border);
+            box-shadow: 0 4px 20px rgba(45,52,54,0.08);
+            overflow: hidden;
+        }
+
+        .card-header {
+            padding: 16px 24px;
+            border-bottom: 1.5px solid var(--border);
+            display: flex; align-items: center; justify-content: space-between;
+            gap: 12px; flex-wrap: wrap;
+        }
+
+        .card-header-left { display: flex; align-items: center; gap: 14px; }
+
+        .card-title {
+            font-size: 0.75rem; font-weight: 800; letter-spacing: 1.4px;
+            text-transform: uppercase; color: var(--primary);
+        }
+
+        /* ── FILTER BAR ── */
+        .filter-bar { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+
+        .filter-input, .filter-select {
+            padding: 7px 13px; border: 1.5px solid var(--border);
+            border-radius: 7px; font-size: 0.80rem;
+            font-family: 'Montserrat', sans-serif; color: var(--dark);
+            background: #fff; outline: none;
+            transition: border-color 180ms, box-shadow 180ms;
+        }
+
+        .filter-input:focus, .filter-select:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(193,120,87,0.12);
+        }
+
+        /* ── TABLE ── */
+        .table-wrap { overflow-x: auto; }
+
+        table {
+            width: 100%; border-collapse: collapse;
+            font-size: 0.82rem;
+        }
+
+        thead tr {
+            background: rgba(193,120,87,0.06);
+            border-bottom: 1.5px solid var(--border);
+        }
+
+        th {
+            padding: 11px 16px; text-align: left;
+            font-size: 0.68rem; font-weight: 800;
+            letter-spacing: 1.1px; text-transform: uppercase;
+            color: var(--primary); white-space: nowrap;
+        }
+
+        td {
+            padding: 13px 16px; color: var(--dark);
+            border-bottom: 1px solid rgba(45,34,30,0.06);
+            vertical-align: middle;
+        }
+
+        tr:last-child td { border-bottom: none; }
+
+        tbody tr { transition: background 140ms; }
+        tbody tr:hover { background: rgba(193,120,87,0.04); }
+
+        .td-muted { color: var(--muted); font-size: 0.76rem; }
+
+        /* status pill */
+        .pill {
+            display: inline-block; padding: 3px 11px;
+            border-radius: 20px; font-size: 0.68rem; font-weight: 700;
+            letter-spacing: 0.5px; text-transform: uppercase;
+            white-space: nowrap;
+        }
+
+        .pill-open   { background: rgba(193,120,87,0.14); color: var(--primary); }
+        .pill-progress{ background: rgba(61,125,138,0.14); color: var(--secondary); }
+        .pill-done   { background: rgba(58,125,92,0.14);  color: var(--green); }
+        .pill-avail  { background: rgba(58,125,92,0.14);  color: var(--green); }
+        .pill-leased { background: rgba(45,52,54,0.10);   color: var(--muted); }
+
+        /* action buttons in table */
+        .btn-sm {
+            padding: 5px 13px; border-radius: 6px; font-size: 0.74rem;
+            font-weight: 700; cursor: pointer; border: 1.5px solid;
+            font-family: 'Montserrat', sans-serif;
+            transition: background 160ms, transform 140ms;
+            white-space: nowrap;
+        }
+
+        .btn-view   { border-color: var(--secondary); color: var(--secondary); background: transparent; }
+        .btn-view:hover { background: rgba(61,125,138,0.10); transform: translateY(-1px); }
+
+        .btn-delete { border-color: var(--red); color: var(--red); background: transparent; }
+        .btn-delete:hover { background: rgba(176,85,85,0.08); transform: translateY(-1px); }
+
+        .btn-status { border-color: var(--primary); color: var(--primary); background: transparent; }
+        .btn-status:hover { background: rgba(193,120,87,0.08); transform: translateY(-1px); }
+
+        /* empty row */
+        .empty-row td {
+            text-align: center; padding: 48px; color: var(--muted);
+            font-size: 0.85rem; font-weight: 500;
+        }
+
+        /* ── DETAIL DRAWER (maintenance) ── */
+        .drawer-overlay {
+            display: none; position: fixed; inset: 0; z-index: 500;
+            background: rgba(45,52,54,0.35); backdrop-filter: blur(3px);
+        }
+
+        .drawer-overlay.open { display: flex; align-items: flex-start; justify-content: flex-end; }
+
+        .drawer {
+            width: 480px; max-width: 95vw; height: 100vh;
+            background: #fff; overflow-y: auto;
+            box-shadow: -8px 0 40px rgba(45,52,54,0.18);
+            display: flex; flex-direction: column;
+        }
+
+        .drawer-header {
+            padding: 24px 28px; background: var(--primary);
+            display: flex; align-items: center; justify-content: space-between;
+        }
+
+        .drawer-header h2 { font-size: 1rem; font-weight: 700; color: #fff; }
+        .drawer-header p  { font-size: 0.76rem; color: rgba(255,255,255,0.8); margin-top: 2px; }
+
+        .drawer-close {
+            font-size: 1.3rem; color: #fff; cursor: pointer;
+            background: rgba(255,255,255,0.18); border: none;
+            width: 34px; height: 34px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            transition: background 160ms;
+        }
+
+        .drawer-close:hover { background: rgba(255,255,255,0.32); }
+
+        .drawer-body { padding: 28px; display: flex; flex-direction: column; gap: 18px; flex: 1; }
+
+        .drawer-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+
+        .drawer-field { display: flex; flex-direction: column; gap: 4px; }
+
+        .drawer-field label {
+            font-size: 0.65rem; font-weight: 800; letter-spacing: 1px;
+            text-transform: uppercase; color: var(--muted);
+        }
+
+        .drawer-field span {
+            font-size: 0.85rem; font-weight: 500; color: var(--dark);
+            word-break: break-word;
+        }
+
+        .drawer-field.full { grid-column: 1 / -1; }
+
+        .drawer-divider {
+            border: none; border-top: 1.5px solid var(--border); margin: 4px 0;
+        }
+
+        .drawer-status-row {
+            display: flex; gap: 10px; flex-wrap: wrap; margin-top: 8px;
+        }
+
+        .btn-status-set {
+            padding: 8px 18px; border-radius: 7px; font-size: 0.78rem;
+            font-weight: 700; cursor: pointer; border: 1.5px solid;
+            font-family: 'Montserrat', sans-serif;
+            transition: background 160ms, transform 140ms;
+        }
+
+        .btn-status-set.open     { border-color: var(--primary);  color: var(--primary); }
+        .btn-status-set.progress { border-color: var(--secondary); color: var(--secondary); }
+        .btn-status-set.done     { border-color: var(--green);     color: var(--green); }
+
+        .btn-status-set:hover { opacity: 0.75; transform: translateY(-1px); }
+        .btn-status-set.selected { color: #fff; }
+        .btn-status-set.open.selected     { background: var(--primary); }
+        .btn-status-set.progress.selected { background: var(--secondary); }
+        .btn-status-set.done.selected     { background: var(--green); }
+
+        /* ── ADD PROPERTY FORM ── */
+        .form-card {
+            background: var(--card); border-radius: 16px;
+            border: 1.5px solid var(--border);
+            box-shadow: 0 4px 20px rgba(45,52,54,0.08);
+            overflow: hidden;
+        }
+
+        .form-header {
+            background: var(--primary); padding: 20px 28px;
+            display: flex; align-items: center; gap: 14px;
+        }
+
+        .form-header h2 { font-size: 1rem; font-weight: 700; color: #fff; }
+        .form-header p  { font-size: 0.74rem; color: rgba(255,255,255,0.8); margin-top: 2px; }
+
+        .form-body {
+            padding: 32px 36px;
+            display: flex; flex-direction: column; gap: 20px;
+        }
+
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+        .form-row.thirds { grid-template-columns: 1fr 1fr 1fr; }
+        .form-row.full   { grid-template-columns: 1fr; }
+
+        .field-group { display: flex; flex-direction: column; gap: 6px; }
+
+        .field-group label {
+            font-size: 0.68rem; font-weight: 800;
+            letter-spacing: 0.9px; text-transform: uppercase;
+            color: #6b6560;
+        }
+
+        .field-group input,
+        .field-group select,
+        .field-group textarea {
+            padding: 10px 14px;
+            border: 1.5px solid rgba(45,34,30,0.14); border-radius: 8px;
+            font-size: 0.88rem; color: var(--dark); background: #fff;
+            outline: none; font-family: 'Montserrat', sans-serif;
+            transition: border-color 200ms, box-shadow 200ms;
+            resize: none;
+        }
+
+        .field-group input:focus,
+        .field-group select:focus,
+        .field-group textarea:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(193,120,87,0.12);
+        }
+
+        /* checkbox group */
+        .checkbox-row { display: flex; gap: 28px; flex-wrap: wrap; padding-top: 4px; }
+
+        .checkbox-label {
+            display: flex; align-items: center; gap: 8px;
+            font-size: 0.82rem; font-weight: 600; color: var(--dark);
+            cursor: pointer;
+        }
+
+        .checkbox-label input[type="checkbox"] {
+            width: 16px; height: 16px; padding: 0; cursor: pointer;
+            accent-color: var(--primary);
+        }
+
+        /* ── PHOTO UPLOADER ── */
+        .photo-section { display: flex; flex-direction: column; gap: 12px; }
+
+        .photo-section-label {
+            font-size: 0.68rem; font-weight: 800; letter-spacing: 0.9px;
+            text-transform: uppercase; color: #6b6560;
+        }
+
+        .photo-drop-zone {
+            border: 2px dashed rgba(193,120,87,0.40);
+            border-radius: 12px; padding: 32px 20px;
+            text-align: center; cursor: pointer;
+            transition: border-color 200ms, background 200ms;
+            position: relative;
+        }
+
+        .photo-drop-zone:hover,
+        .photo-drop-zone.dragover {
+            border-color: var(--primary);
+            background: rgba(193,120,87,0.05);
+        }
+
+        .photo-drop-zone input[type="file"] {
+            position: absolute; inset: 0; opacity: 0;
+            cursor: pointer; width: 100%; height: 100%;
+        }
+
+        .drop-icon { font-size: 2rem; margin-bottom: 8px; }
+
+        .drop-text {
+            font-size: 0.84rem; font-weight: 600; color: var(--dark);
+        }
+
+        .drop-sub {
+            font-size: 0.72rem; color: var(--muted); margin-top: 4px;
+        }
+
+        /* photo preview grid */
+        .photo-preview-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+            gap: 10px;
+        }
+
+        .photo-thumb {
+            position: relative; border-radius: 8px; overflow: hidden;
+            aspect-ratio: 4/3; border: 1.5px solid var(--border);
+        }
+
+        .photo-thumb img {
+            width: 100%; height: 100%; object-fit: cover; display: block;
+        }
+
+        .photo-thumb .thumb-remove {
+            position: absolute; top: 4px; right: 4px;
+            background: rgba(0,0,0,0.55); color: #fff;
+            border: none; border-radius: 50%;
+            width: 22px; height: 22px; font-size: 0.72rem;
+            cursor: pointer; display: flex; align-items: center; justify-content: center;
+            transition: background 160ms;
+        }
+
+        .photo-thumb .thumb-remove:hover { background: rgba(176,85,85,0.9); }
+
+        .photo-thumb .primary-badge {
+            position: absolute; bottom: 4px; left: 4px;
+            background: var(--primary); color: #fff;
+            font-size: 0.58rem; font-weight: 800; letter-spacing: 0.4px;
+            padding: 2px 6px; border-radius: 10px;
+            text-transform: uppercase;
+        }
+
+        .photo-thumb .set-primary-btn {
+            position: absolute; bottom: 4px; left: 4px;
+            background: rgba(0,0,0,0.45); color: #fff;
+            font-size: 0.58rem; font-weight: 700; padding: 2px 7px;
+            border-radius: 10px; border: none; cursor: pointer;
+            transition: background 160ms;
+        }
+
+        .photo-thumb .set-primary-btn:hover { background: var(--primary); }
+
+        /* ── FORM FOOTER ── */
+        .form-footer {
+            padding: 20px 36px;
+            border-top: 1.5px solid var(--border);
+            display: flex; align-items: center; justify-content: space-between;
+            flex-wrap: wrap; gap: 14px;
+        }
+
+        .form-note { font-size: 0.76rem; color: var(--muted); font-weight: 500; }
+
+        .btn-primary {
+            padding: 12px 36px; background: var(--primary); color: #fff;
+            border: none; border-radius: 8px; font-size: 0.9rem; font-weight: 700;
+            cursor: pointer; letter-spacing: 0.5px;
+            font-family: 'Montserrat', sans-serif;
+            transition: background 200ms, transform 160ms, box-shadow 200ms;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-d); transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(193,120,87,0.35);
+        }
+
+        .btn-primary:disabled {
+            background: var(--muted); cursor: not-allowed; transform: none;
+            box-shadow: none;
+        }
+
+        /* ── TOAST ── */
+        #toast {
+            position: fixed; bottom: 32px; right: 32px; z-index: 9999;
+            padding: 14px 22px; border-radius: 10px;
+            font-size: 0.84rem; font-weight: 700;
+            box-shadow: 0 6px 24px rgba(45,52,54,0.18);
+            transform: translateY(100px); opacity: 0;
+            transition: transform 280ms cubic-bezier(.34,1.4,.64,1), opacity 280ms;
+            pointer-events: none;
+        }
+
+        #toast.show { transform: translateY(0); opacity: 1; }
+        #toast.success { background: var(--green); color: #fff; }
+        #toast.error   { background: var(--red);   color: #fff; }
+
+        /* ── LOADING SPINNER ── */
+        .spinner-wrap { display: flex; align-items: center; justify-content: center; padding: 48px; }
+        .spinner {
+            width: 36px; height: 36px;
+            border: 3px solid rgba(193,120,87,0.20);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin .7s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* ── PROPERTY THUMB IN TABLE ── */
+        .prop-thumb {
+            width: 56px; height: 42px; border-radius: 6px;
+            object-fit: cover; border: 1px solid var(--border);
+            background: #ede3d4; flex-shrink: 0;
+        }
+
+        .prop-thumb-placeholder {
+            width: 56px; height: 42px; border-radius: 6px;
+            background: linear-gradient(135deg,#ede3d4 0%,#d4c4a8 100%);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.2rem; border: 1px solid var(--border);
+            flex-shrink: 0;
+        }
+
+        .prop-info-cell { display: flex; align-items: center; gap: 12px; }
+    </style>
+</head>
+<body>
+
+<!-- ── LOGIN SCREEN ── -->
+<div id="login-screen">
+    <div class="login-box">
+        <img src="./MoscowPictures/pplogo.png" alt="Palouse Properties" class="login-logo">
+        <h2>Admin Portal</h2>
+        <input type="text"     id="login-user" placeholder="Username" autocomplete="username">
+        <input type="password" id="login-pass" placeholder="Password" autocomplete="current-password"
+               onkeydown="if(event.key==='Enter') attemptLogin()">
+        <button class="btn-login" onclick="attemptLogin()">Sign In</button>
+        <span class="login-error" id="login-error">Invalid credentials. Try again.</span>
+    </div>
+</div>
+
+<!-- ── MAIN APP ── -->
+<div id="app">
+
+    <!-- Top bar -->
+    <div id="topbar">
+        <div class="topbar-left">
+            <img src="./MoscowPictures/pplogo.png" alt="Palouse Properties" class="topbar-logo">
+            <span class="topbar-badge">Admin</span>
+        </div>
+        <div class="topbar-right">
+            <a href="index.html" style="font-size:0.78rem;font-weight:700;color:var(--dark);text-decoration:none;">← View Site</a>
+            <button class="btn-logout" onclick="logout()">Sign Out</button>
+        </div>
+    </div>
+
+    <!-- Sidebar -->
+    <div id="sidebar">
+        <span class="nav-label">Dashboard</span>
+        <div class="nav-item active" onclick="showSection('maintenance')" id="nav-maintenance">
+            <span class="nav-icon">🔧</span> Maintenance
+            <span class="nav-count" id="maintenance-count">—</span>
+        </div>
+
+        <span class="nav-label">Listings</span>
+        <div class="nav-item" onclick="showSection('properties')" id="nav-properties">
+            <span class="nav-icon">🏠</span> Properties
+            <span class="nav-count" id="property-count">—</span>
+        </div>
+        <div class="nav-item" onclick="showSection('add-property')" id="nav-add-property">
+            <span class="nav-icon">➕</span> Add Property
+        </div>
+    </div>
+
+    <!-- Main content -->
+    <div id="main">
+
+        <!-- ══ MAINTENANCE SECTION ══ -->
+        <div class="section active" id="section-maintenance">
+            <div class="section-header">
+                <h1 class="section-title">Maintenance Requests</h1>
+            </div>
+
+            <!-- Stats -->
+            <div class="stat-row">
+                <div class="stat-chip">
+                    <div class="stat-num" id="stat-total">—</div>
+                    <div class="stat-label">Total Tickets</div>
+                </div>
+                <div class="stat-chip">
+                    <div class="stat-num" id="stat-open">—</div>
+                    <div class="stat-label">Open</div>
+                </div>
+                <div class="stat-chip">
+                    <div class="stat-num" id="stat-progress">—</div>
+                    <div class="stat-label">In Progress</div>
+                </div>
+                <div class="stat-chip">
+                    <div class="stat-num" id="stat-done">—</div>
+                    <div class="stat-label">Resolved</div>
+                </div>
+            </div>
+
+            <!-- Table card -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-header-left">
+                        <span class="card-title">All Tickets</span>
+                    </div>
+                    <div class="filter-bar">
+                        <input class="filter-input" type="text" id="m-filter-text"
+                               placeholder="Search name / address…" oninput="filterMaintenance()">
+                        <select class="filter-select" id="m-filter-status" onchange="filterMaintenance()">
+                            <option value="">All Statuses</option>
+                            <option value="open">Open</option>
+                            <option value="in_progress">In Progress</option>
+                            <option value="resolved">Resolved</option>
+                        </select>
+                        <select class="filter-select" id="m-filter-cat" onchange="filterMaintenance()">
+                            <option value="">All Categories</option>
+                            <option>Plumbing</option>
+                            <option>Electrical</option>
+                            <option>HVAC</option>
+                            <option>Appliances</option>
+                            <option>Structural</option>
+                            <option>Pest</option>
+                            <option>Exterior</option>
+                            <option>Other</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Ticket</th>
+                                <th>Tenant</th>
+                                <th>Address</th>
+                                <th>Category</th>
+                                <th>Submitted</th>
+                                <th>Status</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody id="maintenance-tbody">
+                            <tr><td colspan="7"><div class="spinner-wrap"><div class="spinner"></div></div></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- ══ PROPERTIES SECTION ══ -->
+        <div class="section" id="section-properties">
+            <div class="section-header">
+                <h1 class="section-title">Property Listings</h1>
+                <button class="btn-primary" onclick="showSection('add-property')" style="padding:10px 24px;font-size:0.82rem;">
+                    + Add Property
+                </button>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-header-left">
+                        <span class="card-title">All Properties</span>
+                    </div>
+                    <div class="filter-bar">
+                        <select class="filter-select" id="p-filter-status" onchange="filterProperties()">
+                            <option value="">All Statuses</option>
+                            <option value="true">Available</option>
+                            <option value="false">Leased</option>
+                        </select>
+                        <select class="filter-select" id="p-filter-type" onchange="filterProperties()">
+                            <option value="">All Types</option>
+                            <option>Apartment</option>
+                            <option>House</option>
+                            <option>Studio</option>
+                            <option>TownHome</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Photo</th>
+                                <th>Address</th>
+                                <th>Type</th>
+                                <th>Beds / Baths</th>
+                                <th>Rent / mo</th>
+                                <th>Photos</th>
+                                <th>Status</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody id="properties-tbody">
+                            <tr><td colspan="8"><div class="spinner-wrap"><div class="spinner"></div></div></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- ══ ADD PROPERTY SECTION ══ -->
+        <div class="section" id="section-add-property">
+            <div class="section-header">
+                <h1 class="section-title">Add New Property</h1>
+            </div>
+
+            <div class="form-card">
+                <div class="form-header">
+                    <div>
+                        <h2>Property Details</h2>
+                        <p>* Required fields</p>
+                    </div>
+                </div>
+
+                <div class="form-body">
+                    <!-- Address -->
+                    <div class="form-row full">
+                        <div class="field-group">
+                            <label for="p-address">* Street Address</label>
+                            <input type="text" id="p-address" placeholder="123 Main St, Moscow, ID 83843">
+                        </div>
+                    </div>
+
+                    <!-- Type / Beds / Baths / Sqft -->
+                    <div class="form-row">
+                        <div class="field-group">
+                            <label for="p-type">* Property Type</label>
+                            <select id="p-type">
+                                <option value="">Select type…</option>
+                                <option>Apartment</option>
+                                <option>House</option>
+                                <option>Studio</option>
+                                <option>TownHome</option>
+                            </select>
+                        </div>
+                        <div class="field-group">
+                            <label for="p-price">* Monthly Rent ($)</label>
+                            <input type="number" id="p-price" placeholder="e.g. 1200" min="0">
+                        </div>
+                    </div>
+
+                    <div class="form-row thirds">
+                        <div class="field-group">
+                            <label for="p-beds">* Bedrooms (0 = Studio)</label>
+                            <input type="number" id="p-beds" placeholder="e.g. 2" min="0">
+                        </div>
+                        <div class="field-group">
+                            <label for="p-baths">Bathrooms</label>
+                            <input type="number" id="p-baths" placeholder="e.g. 1.5" min="0" step="0.5">
+                        </div>
+                        <div class="field-group">
+                            <label for="p-sqft">Sq Ft</label>
+                            <input type="number" id="p-sqft" placeholder="e.g. 850" min="0">
+                        </div>
+                    </div>
+
+                    <!-- Available date -->
+                    <div class="form-row">
+                        <div class="field-group">
+                            <label for="p-avail-date">Available Date (leave blank = now)</label>
+                            <input type="date" id="p-avail-date">
+                        </div>
+                        <div class="field-group">
+                            <label for="p-laundry">Laundry</label>
+                            <select id="p-laundry">
+                                <option value="">— None —</option>
+                                <option>In-unit</option>
+                                <option>Shared</option>
+                                <option>Hook-ups</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Checkboxes -->
+                    <div class="field-group">
+                        <label>Amenities</label>
+                        <div class="checkbox-row">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="p-available" checked> Available Now
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="p-pets"> Pet Friendly
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="p-parking"> Parking Included
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Description -->
+                    <div class="form-row full">
+                        <div class="field-group">
+                            <label for="p-desc">Description</label>
+                            <textarea id="p-desc" rows="4"
+                                placeholder="Describe the property — features, nearby landmarks, included utilities…"></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Photo uploader -->
+                    <div class="photo-section">
+                        <span class="photo-section-label">Property Photos</span>
+                        <div class="photo-drop-zone" id="drop-zone"
+                             ondragover="handleDragOver(event)"
+                             ondragleave="handleDragLeave(event)"
+                             ondrop="handleDrop(event)">
+                            <input type="file" accept="image/*" multiple
+                                   id="photo-input" onchange="handlePhotoSelect(this.files)">
+                            <div class="drop-icon">📷</div>
+                            <div class="drop-text">Click to upload or drag & drop photos</div>
+                            <div class="drop-sub">JPG, PNG, WEBP — up to 10 MB each · First photo = primary thumbnail</div>
+                        </div>
+                        <div class="photo-preview-grid" id="photo-preview-grid"></div>
+                    </div>
+                </div>
+
+                <div class="form-footer">
+                    <span class="form-note">Photos are uploaded with the property and stored on the server.</span>
+                    <button class="btn-primary" id="btn-add-property" onclick="submitProperty()">
+                        Save Property
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </div><!-- /#main -->
+</div><!-- /#app -->
+
+<!-- ── MAINTENANCE DETAIL DRAWER ── -->
+<div class="drawer-overlay" id="drawer-overlay" onclick="closeDrawer(event)">
+    <div class="drawer" id="drawer">
+        <div class="drawer-header">
+            <div>
+                <h2 id="drawer-ticket">Ticket</h2>
+                <p id="drawer-date"></p>
+            </div>
+            <button class="drawer-close" onclick="closeDrawerDirect()">✕</button>
+        </div>
+        <div class="drawer-body">
+            <div class="drawer-row">
+                <div class="drawer-field">
+                    <label>First Name</label>
+                    <span id="df-first"></span>
+                </div>
+                <div class="drawer-field">
+                    <label>Last Name</label>
+                    <span id="df-last"></span>
+                </div>
+            </div>
+            <div class="drawer-row">
+                <div class="drawer-field">
+                    <label>Email</label>
+                    <span id="df-email"></span>
+                </div>
+                <div class="drawer-field">
+                    <label>Phone</label>
+                    <span id="df-phone"></span>
+                </div>
+            </div>
+            <div class="drawer-row">
+                <div class="drawer-field">
+                    <label>Address</label>
+                    <span id="df-address"></span>
+                </div>
+                <div class="drawer-field">
+                    <label>Unit</label>
+                    <span id="df-unit"></span>
+                </div>
+            </div>
+            <hr class="drawer-divider">
+            <div class="drawer-row">
+                <div class="drawer-field">
+                    <label>Category</label>
+                    <span id="df-category"></span>
+                </div>
+                <div class="drawer-field">
+                    <label>Preferred Contact Time</label>
+                    <span id="df-pref-time"></span>
+                </div>
+            </div>
+            <div class="drawer-field full">
+                <label>Description</label>
+                <span id="df-desc"></span>
+            </div>
+            <hr class="drawer-divider">
+            <div class="drawer-field">
+                <label>Update Status</label>
+                <div class="drawer-status-row">
+                    <button class="btn-status-set open"     onclick="setStatus('open')"       id="dsb-open">Open</button>
+                    <button class="btn-status-set progress" onclick="setStatus('in_progress')" id="dsb-progress">In Progress</button>
+                    <button class="btn-status-set done"     onclick="setStatus('resolved')"    id="dsb-done">Resolved</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ── TOAST ── -->
+<div id="toast"></div>
+
+<script>
+// ════════════════════════════════════════════════════════════════════
+//  CONFIG
+// ════════════════════════════════════════════════════════════════════
+const API = 'http://localhost:3000';
+
+// Hardcoded admin credentials — for production use server-side sessions
+const ADMIN_USER = 'admin';
+const ADMIN_PASS = 'palouse2024';
+
+// ════════════════════════════════════════════════════════════════════
+//  AUTH
+// ════════════════════════════════════════════════════════════════════
+function attemptLogin() {
+    const u = document.getElementById('login-user').value.trim();
+    const p = document.getElementById('login-pass').value;
+    if (u === ADMIN_USER && p === ADMIN_PASS) {
+        sessionStorage.setItem('pp-admin', '1');
+        document.getElementById('login-screen').style.display = 'none';
+        document.getElementById('app').style.display = 'flex';
+        document.getElementById('app').style.flexDirection = 'column';
+        loadAll();
+    } else {
+        document.getElementById('login-error').style.display = 'block';
+    }
+}
+
+function logout() {
+    sessionStorage.removeItem('pp-admin');
+    location.reload();
+}
+
+// Auto-restore session
+window.addEventListener('DOMContentLoaded', () => {
+    if (sessionStorage.getItem('pp-admin') === '1') {
+        document.getElementById('login-screen').style.display = 'none';
+        document.getElementById('app').style.display = 'flex';
+        document.getElementById('app').style.flexDirection = 'column';
+        loadAll();
+    }
+});
+
+// ════════════════════════════════════════════════════════════════════
+//  NAV
+// ════════════════════════════════════════════════════════════════════
+function showSection(name) {
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    document.getElementById('section-' + name).classList.add('active');
+    document.getElementById('nav-' + name)?.classList.add('active');
+}
+
+// ════════════════════════════════════════════════════════════════════
+//  LOAD ALL DATA ON LOGIN
+// ════════════════════════════════════════════════════════════════════
+function loadAll() {
+    loadMaintenance();
+    loadProperties();
+}
+
+// ════════════════════════════════════════════════════════════════════
+//  MAINTENANCE
+// ════════════════════════════════════════════════════════════════════
+let allTickets = [];
+
+async function loadMaintenance() {
+    try {
+        const res = await fetch(`${API}/admin/maintenance`);
+        const data = await res.json();
+        if (data.success) {
+            allTickets = data.tickets;
+            updateMaintenanceStats(allTickets);
+            renderMaintenanceTable(allTickets);
+            document.getElementById('maintenance-count').textContent = allTickets.length;
+        } else {
+            maintenanceError();
+        }
+    } catch (e) {
+        console.error(e);
+        maintenanceError();
+    }
+}
+
+function maintenanceError() {
+    document.getElementById('maintenance-tbody').innerHTML =
+        `<tr class="empty-row"><td colspan="7">⚠️ Could not load tickets. Is the server running?</td></tr>`;
+}
+
+function updateMaintenanceStats(tickets) {
+    document.getElementById('stat-total').textContent    = tickets.length;
+    document.getElementById('stat-open').textContent     = tickets.filter(t => t.status === 'open').length;
+    document.getElementById('stat-progress').textContent = tickets.filter(t => t.status === 'in_progress').length;
+    document.getElementById('stat-done').textContent     = tickets.filter(t => t.status === 'resolved').length;
+}
+
+function filterMaintenance() {
+    const text   = document.getElementById('m-filter-text').value.toLowerCase();
+    const status = document.getElementById('m-filter-status').value;
+    const cat    = document.getElementById('m-filter-cat').value;
+
+    const filtered = allTickets.filter(t => {
+        const matchText   = !text   || `${t.firstname} ${t.lastname} ${t.address}`.toLowerCase().includes(text);
+        const matchStatus = !status || t.status === status;
+        const matchCat    = !cat    || t.catagory === cat;
+        return matchText && matchStatus && matchCat;
+    });
+
+    renderMaintenanceTable(filtered);
+}
+
+function renderMaintenanceTable(tickets) {
+    const tbody = document.getElementById('maintenance-tbody');
+    if (!tickets.length) {
+        tbody.innerHTML = `<tr class="empty-row"><td colspan="7">No tickets match your filters.</td></tr>`;
+        return;
+    }
+
+    tbody.innerHTML = tickets.map(t => `
+        <tr>
+            <td style="font-weight:700;color:var(--primary);white-space:nowrap">${esc(t.ticket_id)}</td>
+            <td>${esc(t.firstname)} ${esc(t.lastname)}</td>
+            <td class="td-muted">${esc(t.address)}${t.unit ? ' #'+esc(t.unit) : ''}</td>
+            <td>${esc(t.catagory)}</td>
+            <td class="td-muted" style="white-space:nowrap">${fmtDate(t.submitted_at)}</td>
+            <td>${statusPill(t.status)}</td>
+            <td style="white-space:nowrap;display:flex;gap:8px">
+                <button class="btn-sm btn-view"   onclick="openDrawer(${t.id})">View</button>
+                <button class="btn-sm btn-delete" onclick="deleteTicket(${t.id})">Delete</button>
+            </td>
+        </tr>
+    `).join('');
+}
+
+function statusPill(s) {
+    if (s === 'in_progress') return `<span class="pill pill-progress">In Progress</span>`;
+    if (s === 'resolved')    return `<span class="pill pill-done">Resolved</span>`;
+    return `<span class="pill pill-open">Open</span>`;
+}
+
+// ── Drawer ──
+let drawerTicketId = null;
+let drawerCurrentStatus = 'open';
+
+function openDrawer(id) {
+    const t = allTickets.find(t => t.id === id);
+    if (!t) return;
+    drawerTicketId = id;
+    drawerCurrentStatus = t.status || 'open';
+
+    document.getElementById('drawer-ticket').textContent  = t.ticket_id;
+    document.getElementById('drawer-date').textContent    = 'Submitted: ' + fmtDate(t.submitted_at);
+    document.getElementById('df-first').textContent       = t.firstname    || '—';
+    document.getElementById('df-last').textContent        = t.lastname     || '—';
+    document.getElementById('df-email').textContent       = t.email        || '—';
+    document.getElementById('df-phone').textContent       = t.phone        || '—';
+    document.getElementById('df-address').textContent     = t.address      || '—';
+    document.getElementById('df-unit').textContent        = t.unit         || '—';
+    document.getElementById('df-category').textContent    = t.catagory     || '—';
+    document.getElementById('df-pref-time').textContent   = t.preferred_time || '—';
+    document.getElementById('df-desc').textContent        = t.description  || '—';
+
+    highlightStatusButtons(drawerCurrentStatus);
+    document.getElementById('drawer-overlay').classList.add('open');
+}
+
+function closeDrawer(e) {
+    if (e.target === document.getElementById('drawer-overlay')) closeDrawerDirect();
+}
+
+function closeDrawerDirect() {
+    document.getElementById('drawer-overlay').classList.remove('open');
+    drawerTicketId = null;
+}
+
+function highlightStatusButtons(status) {
+    ['open','progress','done'].forEach(k => {
+        document.getElementById('dsb-'+k).classList.remove('selected');
+    });
+    const map = { open:'open', in_progress:'progress', resolved:'done' };
+    const key = map[status] || 'open';
+    document.getElementById('dsb-'+key).classList.add('selected');
+}
+
+async function setStatus(newStatus) {
+    if (!drawerTicketId) return;
+    try {
+        const res  = await fetch(`${API}/admin/maintenance/${drawerTicketId}/status`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ status: newStatus })
+        });
+        const data = await res.json();
+        if (data.success) {
+            const t = allTickets.find(t => t.id === drawerTicketId);
+            if (t) t.status = newStatus;
+            drawerCurrentStatus = newStatus;
+            highlightStatusButtons(newStatus);
+            updateMaintenanceStats(allTickets);
+            filterMaintenance();
+            showToast('Status updated', 'success');
+        } else {
+            showToast('Could not update status', 'error');
+        }
+    } catch (e) {
+        showToast('Server error', 'error');
+    }
+}
+
+async function deleteTicket(id) {
+    if (!confirm('Delete this maintenance ticket? This cannot be undone.')) return;
+    try {
+        const res  = await fetch(`${API}/admin/maintenance/${id}`, { method: 'DELETE' });
+        const data = await res.json();
+        if (data.success) {
+            allTickets = allTickets.filter(t => t.id !== id);
+            updateMaintenanceStats(allTickets);
+            filterMaintenance();
+            document.getElementById('maintenance-count').textContent = allTickets.length;
+            showToast('Ticket deleted', 'success');
+        } else {
+            showToast('Could not delete ticket', 'error');
+        }
+    } catch (e) {
+        showToast('Server error', 'error');
+    }
+}
+
+// ════════════════════════════════════════════════════════════════════
+//  PROPERTIES
+// ════════════════════════════════════════════════════════════════════
+let allProperties = [];
+
+async function loadProperties() {
+    try {
+        const res  = await fetch(`${API}/api/properties`);
+        const data = await res.json();
+        if (data.success) {
+            allProperties = data.properties;
+            renderPropertiesTable(allProperties);
+            document.getElementById('property-count').textContent = allProperties.length;
+        } else {
+            propertiesError();
+        }
+    } catch (e) {
+        console.error(e);
+        propertiesError();
+    }
+}
+
+function propertiesError() {
+    document.getElementById('properties-tbody').innerHTML =
+        `<tr class="empty-row"><td colspan="8">⚠️ Could not load properties. Is the server running?</td></tr>`;
+}
+
+function filterProperties() {
+    const status = document.getElementById('p-filter-status').value;
+    const type   = document.getElementById('p-filter-type').value;
+
+    const filtered = allProperties.filter(p => {
+        const matchStatus = status === '' || String(p.available) === status;
+        const matchType   = !type   || p.type === type;
+        return matchStatus && matchType;
+    });
+
+    renderPropertiesTable(filtered);
+}
+
+function renderPropertiesTable(props) {
+    const tbody = document.getElementById('properties-tbody');
+    if (!props.length) {
+        tbody.innerHTML = `<tr class="empty-row"><td colspan="8">No properties found.</td></tr>`;
+        return;
+    }
+
+    tbody.innerHTML = props.map(p => {
+        const thumb = p.primary_image_url
+            ? `<img class="prop-thumb" src="${esc(p.primary_image_url)}" alt="" loading="lazy"
+                    onerror="this.outerHTML='<div class=\\'prop-thumb-placeholder\\'>🏠</div>'">`
+            : `<div class="prop-thumb-placeholder">🏠</div>`;
+
+        const bedBath = `${p.beds === 0 ? 'Studio' : p.beds + ' bd'}${p.baths ? ' / ' + p.baths + ' ba' : ''}`;
+        const avail   = p.available
+            ? `<span class="pill pill-avail">Available</span>`
+            : `<span class="pill pill-leased">Leased</span>`;
+
+        return `
+            <tr>
+                <td><div class="prop-info-cell">${thumb}</div></td>
+                <td style="font-weight:600;max-width:220px">${esc(p.address)}</td>
+                <td>${esc(p.type)}</td>
+                <td>${bedBath}</td>
+                <td style="font-weight:700;color:var(--primary)">$${Number(p.price).toLocaleString()}</td>
+                <td class="td-muted">${p.photo_count ?? 0} photo${p.photo_count !== 1 ? 's' : ''}</td>
+                <td>${avail}</td>
+                <td style="white-space:nowrap;display:flex;gap:8px">
+                    <button class="btn-sm btn-status"
+                        onclick="toggleAvailability(${p.id}, ${p.available})">
+                        ${p.available ? 'Mark Leased' : 'Mark Available'}
+                    </button>
+                    <button class="btn-sm btn-delete" onclick="deleteProperty(${p.id})">Delete</button>
+                </td>
+            </tr>
+        `;
+    }).join('');
+}
+
+async function toggleAvailability(id, current) {
+    try {
+        const res  = await fetch(`${API}/admin/properties/${id}/availability`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ available: !current })
+        });
+        const data = await res.json();
+        if (data.success) {
+            const p = allProperties.find(p => p.id === id);
+            if (p) p.available = !current;
+            filterProperties();
+            showToast('Availability updated', 'success');
+        } else {
+            showToast('Could not update availability', 'error');
+        }
+    } catch (e) {
+        showToast('Server error', 'error');
+    }
+}
+
+async function deleteProperty(id) {
+    if (!confirm('Delete this property and all its photos? This cannot be undone.')) return;
+    try {
+        const res  = await fetch(`${API}/admin/properties/${id}`, { method: 'DELETE' });
+        const data = await res.json();
+        if (data.success) {
+            allProperties = allProperties.filter(p => p.id !== id);
+            filterProperties();
+            document.getElementById('property-count').textContent = allProperties.length;
+            showToast('Property deleted', 'success');
+        } else {
+            showToast('Could not delete property', 'error');
+        }
+    } catch (e) {
+        showToast('Server error', 'error');
+    }
+}
+
+// ════════════════════════════════════════════════════════════════════
+//  ADD PROPERTY — PHOTO STAGING
+// ════════════════════════════════════════════════════════════════════
+let stagedFiles = [];      // { file, objectUrl, isPrimary }
+let primaryIndex = 0;
+
+function handleDragOver(e)  { e.preventDefault(); document.getElementById('drop-zone').classList.add('dragover'); }
+function handleDragLeave()  { document.getElementById('drop-zone').classList.remove('dragover'); }
+function handleDrop(e) {
+    e.preventDefault();
+    document.getElementById('drop-zone').classList.remove('dragover');
+    addFiles(e.dataTransfer.files);
+}
+function handlePhotoSelect(files) { addFiles(files); }
+
+function addFiles(fileList) {
+    Array.from(fileList).forEach(f => {
+        if (!f.type.startsWith('image/')) return;
+        stagedFiles.push({ file: f, objectUrl: URL.createObjectURL(f), isPrimary: false });
+    });
+    if (stagedFiles.length > 0 && stagedFiles.every(f => !f.isPrimary)) {
+        stagedFiles[0].isPrimary = true;
+        primaryIndex = 0;
+    }
+    renderPhotoPreview();
+}
+
+function setPrimary(idx) {
+    primaryIndex = idx;
+    stagedFiles.forEach((f, i) => f.isPrimary = (i === idx));
+    renderPhotoPreview();
+}
+
+function removePhoto(idx) {
+    URL.revokeObjectURL(stagedFiles[idx].objectUrl);
+    stagedFiles.splice(idx, 1);
+    if (stagedFiles.length > 0) {
+        if (primaryIndex >= stagedFiles.length) primaryIndex = 0;
+        stagedFiles.forEach((f, i) => f.isPrimary = (i === primaryIndex));
+    }
+    renderPhotoPreview();
+}
+
+function renderPhotoPreview() {
+    const grid = document.getElementById('photo-preview-grid');
+    grid.innerHTML = stagedFiles.map((f, i) => `
+        <div class="photo-thumb">
+            <img src="${f.objectUrl}" alt="photo ${i+1}">
+            <button class="thumb-remove" onclick="removePhoto(${i})">✕</button>
+            ${f.isPrimary
+                ? `<span class="primary-badge">Primary</span>`
+                : `<button class="set-primary-btn" onclick="setPrimary(${i})">Set Primary</button>`
+            }
+        </div>
+    `).join('');
+}
+
+// ════════════════════════════════════════════════════════════════════
+//  ADD PROPERTY — SUBMIT
+// ════════════════════════════════════════════════════════════════════
+async function submitProperty() {
+    const address = document.getElementById('p-address').value.trim();
+    const type    = document.getElementById('p-type').value;
+    const price   = document.getElementById('p-price').value;
+    const beds    = document.getElementById('p-beds').value;
+
+    if (!address || !type || !price || beds === '') {
+        showToast('Please fill in all required fields (*)', 'error');
+        return;
+    }
+
+    const btn = document.getElementById('btn-add-property');
+    btn.disabled = true;
+    btn.textContent = 'Saving…';
+
+    try {
+        // Build multipart form — allows sending files + JSON together
+        const fd = new FormData();
+        fd.append('address',        address);
+        fd.append('type',           type);
+        fd.append('price',          price);
+        fd.append('beds',           beds);
+        fd.append('baths',          document.getElementById('p-baths').value       || '');
+        fd.append('sqft',           document.getElementById('p-sqft').value        || '');
+        fd.append('available',      document.getElementById('p-available').checked ? 'true' : 'false');
+        fd.append('available_date', document.getElementById('p-avail-date').value  || '');
+        fd.append('pet_friendly',   document.getElementById('p-pets').checked      ? 'true' : 'false');
+        fd.append('parking',        document.getElementById('p-parking').checked   ? 'true' : 'false');
+        fd.append('laundry',        document.getElementById('p-laundry').value     || '');
+        fd.append('description',    document.getElementById('p-desc').value.trim() || '');
+        fd.append('primary_index',  String(primaryIndex));
+
+        // Append files in display order; primary_index tells the server which is primary
+        stagedFiles.forEach((sf, i) => fd.append('photos', sf.file));
+
+        const res  = await fetch(`${API}/admin/properties`, { method: 'POST', body: fd });
+        const data = await res.json();
+
+        if (data.success) {
+            showToast('Property added successfully!', 'success');
+            resetAddForm();
+            await loadProperties();
+            showSection('properties');
+        } else {
+            showToast(data.error || 'Failed to add property', 'error');
+        }
+    } catch (e) {
+        console.error(e);
+        showToast('Server error — check the console', 'error');
+    } finally {
+        btn.disabled = false;
+        btn.textContent = 'Save Property';
+    }
+}
+
+function resetAddForm() {
+    ['p-address','p-price','p-beds','p-baths','p-sqft','p-avail-date','p-desc'].forEach(id => {
+        document.getElementById(id).value = '';
+    });
+    document.getElementById('p-type').value    = '';
+    document.getElementById('p-laundry').value = '';
+    document.getElementById('p-available').checked   = true;
+    document.getElementById('p-pets').checked        = false;
+    document.getElementById('p-parking').checked     = false;
+    stagedFiles.forEach(f => URL.revokeObjectURL(f.objectUrl));
+    stagedFiles = [];
+    primaryIndex = 0;
+    renderPhotoPreview();
+}
+
+// ════════════════════════════════════════════════════════════════════
+//  HELPERS
+// ════════════════════════════════════════════════════════════════════
+function esc(s) {
+    if (s == null) return '—';
+    return String(s)
+        .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+        .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function fmtDate(ts) {
+    if (!ts) return '—';
+    return new Date(ts).toLocaleDateString('en-US',
+        { month:'short', day:'numeric', year:'numeric' });
+}
+
+let toastTimer;
+function showToast(msg, type='success') {
+    const el = document.getElementById('toast');
+    el.textContent = msg;
+    el.className = `show ${type}`;
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => el.className = '', 3000);
+}
+</script>
+</body>
+</html>
